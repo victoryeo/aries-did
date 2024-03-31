@@ -5,7 +5,7 @@ FROM node:20-bullseye-slim as BUILD_IMAGE
 
 # Install Python, pkg-config, and other dependencies
 RUN apt-get update -y
-RUN apt-get install -y python3 make
+RUN apt-get install -y python3 make gcc g++
 
 #   Set the working directory in the container
 WORKDIR /app
