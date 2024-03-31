@@ -3,16 +3,9 @@ import { textSync } from 'figlet'
 import { prompt } from 'inquirer'
 
 import { BaseInquirer, ConfirmOptions } from './BaseInquirer'
-import { Faber, RegistryOptions } from './Faber'
+import { Issuer, RegistryOptions } from './Issuer'
 import { Listener } from './Listener'
 import { Title } from './OutputClass'
-
-export const runFaber = async () => {
-  clear()
-  console.log(textSync('Faber', { horizontalLayout: 'full' }))
-  const faber = await FaberInquirer.build()
-  await faber.processAnswer()
-}
 
 enum PromptOptions {
   CreateConnection = 'Create connection invitation',
@@ -23,26 +16,26 @@ enum PromptOptions {
   Restart = 'Restart',
 }
 
-export class FaberInquirer extends BaseInquirer {
-  public faber: Faber
+export class IssuerInquirer extends BaseInquirer {
+  public issuer: Issuer
   public promptOptionsString: string[]
   public listener: Listener
 
-  public constructor(faber: Faber) {
+  public constructor(issuer: Issuer) {
     super()
-    this.faber = faber
+    this.issuer = issuer
     this.listener = new Listener()
     this.promptOptionsString = Object.values(PromptOptions)
-    this.listener.messageListener(this.faber.agent, this.faber.name)
+    this.listener.messageListener(this.issuer.agent, this.issuer.name)
   }
 
-  public static async build(): Promise<FaberInquirer> {
-    const faber = await Faber.build()
-    return new FaberInquirer(faber)
+  public static async build(): Promise<IssuerInquirer> {
+    const issuer = await Issuer.build()
+    return new IssuerInquirer(issuer)
   }
 
   private async getPromptChoice() {
-    if (this.faber.outOfBandId) return prompt([this.inquireOptions(this.promptOptionsString)])
+    if (this.issuer.outOfBandId) return prompt([this.inquireOptions(this.promptOptionsString)])
 
     const reducedOption = [PromptOptions.CreateConnection, PromptOptions.Exit, PromptOptions.Restart]
     return prompt([this.inquireOptions(reducedOption)])
@@ -76,7 +69,7 @@ export class FaberInquirer extends BaseInquirer {
   }
 
   public async connection() {
-    await this.faber.setupConnection()
+    await this.issuer.setupConnection()
   }
 
   public async exitUseCase(title: string) {
@@ -90,14 +83,14 @@ export class FaberInquirer extends BaseInquirer {
 
   public async credential() {
     const registry = await prompt([this.inquireOptions([RegistryOptions.indy, RegistryOptions.cheqd])])
-    await this.faber.importDid(registry.options)
-    await this.faber.issueCredential()
+    await this.issuer.importDid(registry.options)
+    await this.issuer.issueCredential()
     const title = 'Is the credential offer accepted?'
     await this.listener.newAcceptedPrompt(title, this)
   }
 
   public async proof() {
-    await this.faber.sendProofRequest()
+    await this.issuer.sendProofRequest()
     const title = 'Is the proof request accepted?'
     await this.listener.newAcceptedPrompt(title, this)
   }
@@ -106,7 +99,7 @@ export class FaberInquirer extends BaseInquirer {
     const message = await this.inquireMessage()
     if (!message) return
 
-    await this.faber.sendMessage(message)
+    await this.issuer.sendMessage(message)
   }
 
   public async exit() {
@@ -114,7 +107,7 @@ export class FaberInquirer extends BaseInquirer {
     if (confirm.options === ConfirmOptions.No) {
       return
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.faber.exit()
+      await this.issuer.exit()
     }
   }
 
@@ -124,8 +117,40 @@ export class FaberInquirer extends BaseInquirer {
       await this.processAnswer()
       return
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.faber.restart()
-      await runFaber()
+      await this.issuer.restart()
+      await runIssuer()
     }
   }
+}
+
+let issuerInst: IssuerInquirer;
+
+export const runIssuer = async () => {
+  clear()
+  console.log(textSync('Issuer', { horizontalLayout: 'full' }))
+  issuerInst = await IssuerInquirer.build()
+  console.log('API List')
+  console.log('POST /api/issuer/receiveConnectionIssuer');
+  console.log('POST /api/issuer/sendMessageIssuer');
+  console.log('POST /api/issuer/restartIssuer');
+}
+
+export const receiveConnectionRequestIssuer = async () => {
+  await issuerInst.connection();
+}
+
+export const sendMessageRequestIssuer = async () => {
+  await issuerInst.message();
+}
+
+export const requestProofIssuer = async () => {
+  await issuerInst.proof();
+}
+
+export const offerCredentialIssuer = async () => {
+  await issuerInst.credential();
+}
+
+export const restartRequestIssuer = async () => {
+  await issuerInst.restart();
 }

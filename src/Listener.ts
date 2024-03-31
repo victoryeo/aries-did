@@ -1,7 +1,7 @@
 import type { Alice } from './Alice'
 import type { AliceInquirer } from './AliceInquirer'
-import type { Faber } from './Faber'
-import type { FaberInquirer } from './FaberInquirer'
+import type { Issuer } from './Issuer'
+import type { IssuerInquirer } from './IssuerInquirer'
 import type {
   Agent,
   BasicMessageStateChangedEvent,
@@ -93,18 +93,18 @@ export class Listener {
     })
   }
 
-  public proofAcceptedListener(faber: Faber, faberInquirer: FaberInquirer) {
-    faber.agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
+  public proofAcceptedListener(issuer: Issuer, issuerInquirer: IssuerInquirer) {
+    issuer.agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
       if (payload.proofRecord.state === ProofState.Done) {
-        await faberInquirer.processAnswer()
+        await issuerInquirer.processAnswer()
       }
     })
   }
 
-  public async newAcceptedPrompt(title: string, faberInquirer: FaberInquirer) {
+  public async newAcceptedPrompt(title: string, issuerInquirer: IssuerInquirer) {
     this.turnListenerOn()
-    await faberInquirer.exitUseCase(title)
+    await issuerInquirer.exitUseCase(title)
     this.turnListenerOff()
-    await faberInquirer.processAnswer()
+    await issuerInquirer.processAnswer()
   }
 }

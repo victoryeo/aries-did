@@ -14,7 +14,7 @@ export enum RegistryOptions {
   cheqd = 'did:cheqd',
 }
 
-export class Faber extends BaseAgent {
+export class Issuer extends BaseAgent {
   public outOfBandId?: string
   public credentialDefinition?: RegisterCredentialDefinitionReturnStateFinished
   public anonCredsIssuerId?: string
@@ -25,10 +25,10 @@ export class Faber extends BaseAgent {
     this.ui = new ui.BottomBar()
   }
 
-  public static async build(): Promise<Faber> {
-    const faber = new Faber(9001, 'faber')
-    await faber.initializeAgent()
-    return faber
+  public static async build(): Promise<Issuer> {
+    const issuer = new Issuer(9001, 'issuer')
+    await issuer.initializeAgent()
+    return issuer
   }
 
   public async importDid(registry: string) {
@@ -135,7 +135,7 @@ export class Faber extends BaseAgent {
       throw new Error(redText('Missing anoncreds issuerId'))
     }
     const schemaTemplate = {
-      name: 'Faber College' + utils.uuid(),
+      name: 'Issuer Org' + utils.uuid(),
       version: '1.0.0',
       attrNames: ['name', 'degree', 'date'],
       issuerId: this.anonCredsIssuerId,
