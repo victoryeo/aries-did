@@ -5,3 +5,5 @@ Agents can performing simple workflow:
 (1) Issuers issues credentials 
 (2) Holders accepts and stores the credentials 
 (3) Verifiers, sends proof request andverifies Credentials
+
+run "npm start" on the command line
