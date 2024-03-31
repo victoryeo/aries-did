@@ -2,6 +2,8 @@ import type { Alice } from './Alice'
 import type { AliceInquirer } from './AliceInquirer'
 import type { Issuer } from './Issuer'
 import type { IssuerInquirer } from './IssuerInquirer'
+import type { Verifier } from './Verifier'
+import type { VerifierInquirer } from './VerifierInquirer'
 import type {
   Agent,
   BasicMessageStateChangedEvent,
@@ -106,5 +108,12 @@ export class Listener {
     await issuerInquirer.exitUseCase(title)
     this.turnListenerOff()
     await issuerInquirer.processAnswer()
+  }
+
+  public async newAcceptedPromptVerifier(title: string, verifierInquirer: VerifierInquirer) {
+    this.turnListenerOn()
+    await verifierInquirer.exitUseCase(title)
+    this.turnListenerOff()
+    await verifierInquirer.processAnswer()
   }
 }

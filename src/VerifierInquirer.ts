@@ -3,39 +3,38 @@ import { textSync } from 'figlet'
 import { prompt } from 'inquirer'
 
 import { BaseInquirer, ConfirmOptions } from './BaseInquirer'
-import { Issuer, RegistryOptions } from './Issuer'
+import { Verifier, RegistryOptions } from './Verifier'
 import { Listener } from './Listener'
 import { Title } from './OutputClass'
 
 enum PromptOptions {
   CreateConnection = 'Create connection invitation',
-  OfferCredential = 'Offer credential',
   RequestProof = 'Request proof',
   SendMessage = 'Send message',
   Exit = 'Exit',
   Restart = 'Restart',
 }
 
-export class IssuerInquirer extends BaseInquirer {
-  public issuer: Issuer
+export class VerifierInquirer extends BaseInquirer {
+  public verifier: Verifier
   public promptOptionsString: string[]
   public listener: Listener
 
-  public constructor(issuer: Issuer) {
+  public constructor(verifier: Verifier) {
     super()
-    this.issuer = issuer
+    this.verifier = verifier
     this.listener = new Listener()
     this.promptOptionsString = Object.values(PromptOptions)
-    this.listener.messageListener(this.issuer.agent, this.issuer.name)
+    this.listener.messageListener(this.verifier.agent, this.verifier.name)
   }
 
-  public static async build(): Promise<IssuerInquirer> {
-    const issuer = await Issuer.build()
-    return new IssuerInquirer(issuer)
+  public static async build(): Promise<VerifierInquirer> {
+    const verifier = await Verifier.build()
+    return new VerifierInquirer(verifier)
   }
 
   private async getPromptChoice() {
-    if (this.issuer.outOfBandId) return prompt([this.inquireOptions(this.promptOptionsString)])
+    if (this.verifier.outOfBandId) return prompt([this.inquireOptions(this.promptOptionsString)])
 
     const reducedOption = [PromptOptions.CreateConnection, PromptOptions.Exit, PromptOptions.Restart]
     return prompt([this.inquireOptions(reducedOption)])
@@ -49,9 +48,6 @@ export class IssuerInquirer extends BaseInquirer {
       case PromptOptions.CreateConnection:
         await this.connection()
         break
-      case PromptOptions.OfferCredential:
-        await this.credential()
-        return
       case PromptOptions.RequestProof:
         await this.proof()
         return
@@ -69,7 +65,7 @@ export class IssuerInquirer extends BaseInquirer {
   }
 
   public async connection() {
-    await this.issuer.setupConnection()
+    await this.verifier.setupConnection()
   }
 
   public async exitUseCase(title: string) {
@@ -81,25 +77,17 @@ export class IssuerInquirer extends BaseInquirer {
     }
   }
 
-  public async credential() {
-    const registry = await prompt([this.inquireOptions([RegistryOptions.indy, RegistryOptions.cheqd])])
-    await this.issuer.importDid(registry.options)
-    await this.issuer.issueCredential()
-    const title = 'Is the credential offer accepted?'
-    await this.listener.newAcceptedPrompt(title, this)
-  }
-
   public async proof() {
-    await this.issuer.sendProofRequest()
+    await this.verifier.sendProofRequest()
     const title = 'Is the proof request accepted?'
-    await this.listener.newAcceptedPrompt(title, this)
+    await this.listener.newAcceptedPromptVerifier(title, this)
   }
 
   public async message() {
     const message = await this.inquireMessage()
     if (!message) return
 
-    await this.issuer.sendMessage(message)
+    await this.verifier.sendMessage(message)
   }
 
   public async exit() {
@@ -107,7 +95,7 @@ export class IssuerInquirer extends BaseInquirer {
     if (confirm.options === ConfirmOptions.No) {
       return
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.issuer.exit()
+      await this.verifier.exit()
     }
   }
 
@@ -117,41 +105,37 @@ export class IssuerInquirer extends BaseInquirer {
       await this.processAnswer()
       return
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.issuer.restart()
-      await runIssuer()
+      await this.verifier.restart()
+      await runVerifier()
     }
   }
 }
 
-let issuerInst: IssuerInquirer;
+let verifierInst: VerifierInquirer;
 
-export const runIssuer = async () => {
+export const runVerifier = async () => {
   clear()
-  console.log(textSync('Issuer', { horizontalLayout: 'full' }))
-  issuerInst = await IssuerInquirer.build()
+  console.log(textSync('verifier', { horizontalLayout: 'full' }))
+  verifierInst = await VerifierInquirer.build()
   console.log('API List')
-  console.log('POST /api/issuer/receiveConnectionIssuer');
-  console.log('POST /api/issuer/sendMessageIssuer');
-  console.log('POST /api/issuer/restartIssuer');
-  console.log('POST /api/issuer/offercCredentialIssuer');
+  console.log('POST /api/verifier/receiveConnectionverifier');
+  console.log('POST /api/verifier/sendMessageverifier');
+  console.log('POST /api/verifier/restartverifier');
+  console.log('POST /api/verifier/requestProofverifier');
 }
 
-export const receiveConnectionRequestIssuer = async () => {
-  await issuerInst.connection();
+export const receiveConnectionRequestVerifier = async () => {
+  await verifierInst.connection();
 }
 
-export const sendMessageRequestIssuer = async () => {
-  await issuerInst.message();
+export const sendMessageRequestVerifier = async () => {
+  await verifierInst.message();
 }
 
-export const requestProofIssuer = async () => {
-  await issuerInst.proof();
+export const requestProofVerifier = async () => {
+  await verifierInst.proof();
 }
 
-export const offerCredentialIssuer = async () => {
-  await issuerInst.credential();
-}
-
-export const restartRequestIssuer = async () => {
-  await issuerInst.restart();
+export const restartRequestVerifier = async () => {
+  await verifierInst.restart();
 }
