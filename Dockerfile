@@ -1,10 +1,11 @@
 #   Use an official Node.js runtime as a parent image
 #FROM node:20.8.0-alpine as BUILD_IMAGE
-#FROM node:20-bullseye-slim as BUILD_IMAGE
-FROM node:20-alpine3.18
+FROM node:20-bullseye-slim as BUILD_IMAGE
+#FROM node:18-alpine
 
 # Install Python, pkg-config, and other dependencies
-#RUN apk add --no-cache nano build-base cairo-dev pango-dev jpeg-dev giflib-dev
+RUN apt-get update -y
+RUN apt-get install -y python3 make
 
 #   Set the working directory in the container
 WORKDIR /app
@@ -23,4 +24,3 @@ EXPOSE 3000
 
 #   Run application
 CMD ["npm", "run", "start"]
-                     
