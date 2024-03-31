@@ -9,21 +9,6 @@ import { BaseInquirer, ConfirmOptions } from './BaseInquirer'
 import { Listener } from './Listener'
 import { Title } from './OutputClass'
 
-export const runAlice = async (): Promise<AliceInquirer> => {
-  clear()
-  console.log(textSync('Alice', { horizontalLayout: 'full' }))
-  const alice = await AliceInquirer.build()
-  //await alice.processAnswer()
-  console.log('API List')
-  console.log('POST /api/alice/receiveConnection');
-  return alice;
-}
-
-export const receiveConnectionRequest = async (invitationUrl: string) => {  
-  const alice = await AliceInquirer.build()
-  await alice.connection();
-}
-
 enum PromptOptions {
   ReceiveConnectionUrl = 'Receive connection invitation',
   SendMessage = 'Send message',
@@ -131,4 +116,28 @@ export class AliceInquirer extends BaseInquirer {
       await runAlice()
     }
   }
+}
+
+let aliceInst: AliceInquirer;
+
+export const runAlice = async () => {
+  clear()
+  console.log(textSync('Alice', { horizontalLayout: 'full' }))
+  aliceInst = await AliceInquirer.build()
+  console.log('API List')
+  console.log('POST /api/alice/receiveConnection');
+  console.log('POST /api/alice/sendMessage');
+  console.log('POST /api/alice/restart');
+}
+
+export const receiveConnectionRequest = async () => {
+  await aliceInst.connection();
+}
+
+export const sendMessageRequest = async () => {
+  await aliceInst.message();
+}
+
+export const restartRequest = async () => {
+  await aliceInst.restart();
 }
