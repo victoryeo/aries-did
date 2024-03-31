@@ -1,10 +1,10 @@
 import express from 'express';
 import { 
-  runAlice, 
-  receiveConnectionRequest,
-  sendMessageRequest,
-  restartRequest 
-} from './AliceInquirer';
+  runHolder, 
+  receiveConnectionRequestHolder,
+  sendMessageRequestHolder,
+  restartRequestHolder 
+} from './HolderInquirer';
 
 import {
   runIssuer,
@@ -25,7 +25,7 @@ import {
 const app = express();
 const port = 3000;
 
-runAlice();
+runHolder();
 runIssuer();
 runVerifier();
 
@@ -33,9 +33,9 @@ app.get('/', (req, res) => {
   res.send('Hello Aries!');
 });
 
-app.post('/api/alice/receiveConnection', receiveConnectionRequest);
-app.post('/api/alice/sendMessage', sendMessageRequest);
-app.post('/api/alice/receiveConnection', restartRequest);
+app.post('/api/alice/receiveConnection', receiveConnectionRequestHolder);
+app.post('/api/alice/sendMessage', sendMessageRequestHolder);
+app.post('/api/alice/receiveConnection', restartRequestHolder);
 
 app.post('/api/issuer/receiveConnection', receiveConnectionRequestIssuer);
 app.post('/api/issuer/sendMessage', sendMessageRequestIssuer);

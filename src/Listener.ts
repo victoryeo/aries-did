@@ -1,5 +1,5 @@
-import type { Alice } from './Alice'
-import type { AliceInquirer } from './AliceInquirer'
+import type { Holder } from './Holder'
+import type { HolderInquirer } from './HolderInquirer'
 import type { Issuer } from './Issuer'
 import type { IssuerInquirer } from './IssuerInquirer'
 import type { Verifier } from './Verifier'
@@ -53,20 +53,20 @@ export class Listener {
     }
   }
 
-  private async newCredentialPrompt(credentialRecord: CredentialExchangeRecord, aliceInquirer: AliceInquirer) {
+  private async newCredentialPrompt(credentialRecord: CredentialExchangeRecord, HolderInquirer: HolderInquirer) {
     this.printCredentialAttributes(credentialRecord)
     this.turnListenerOn()
-    await aliceInquirer.acceptCredentialOffer(credentialRecord)
+    await HolderInquirer.acceptCredentialOffer(credentialRecord)
     this.turnListenerOff()
-    await aliceInquirer.processAnswer()
+    await HolderInquirer.processAnswer()
   }
 
-  public credentialOfferListener(alice: Alice, aliceInquirer: AliceInquirer) {
-    alice.agent.events.on(
+  public credentialOfferListener(holder: Holder, holderInquirer: HolderInquirer) {
+    holder.agent.events.on(
       CredentialEventTypes.CredentialStateChanged,
       async ({ payload }: CredentialStateChangedEvent) => {
         if (payload.credentialRecord.state === CredentialState.OfferReceived) {
-          await this.newCredentialPrompt(payload.credentialRecord, aliceInquirer)
+          await this.newCredentialPrompt(payload.credentialRecord, holderInquirer)
         }
       }
     )
@@ -80,17 +80,17 @@ export class Listener {
     })
   }
 
-  private async newProofRequestPrompt(proofRecord: ProofExchangeRecord, aliceInquirer: AliceInquirer) {
+  private async newProofRequestPrompt(proofRecord: ProofExchangeRecord, holderInquirer: HolderInquirer) {
     this.turnListenerOn()
-    await aliceInquirer.acceptProofRequest(proofRecord)
+    await holderInquirer.acceptProofRequest(proofRecord)
     this.turnListenerOff()
-    await aliceInquirer.processAnswer()
+    await holderInquirer.processAnswer()
   }
 
-  public proofRequestListener(alice: Alice, aliceInquirer: AliceInquirer) {
-    alice.agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
+  public proofRequestListener(holder: Holder, holderInquirer: HolderInquirer) {
+    holder.agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
       if (payload.proofRecord.state === ProofState.RequestReceived) {
-        await this.newProofRequestPrompt(payload.proofRecord, aliceInquirer)
+        await this.newProofRequestPrompt(payload.proofRecord, holderInquirer)
       }
     })
   }

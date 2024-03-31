@@ -4,7 +4,7 @@ import { clear } from 'console'
 import { textSync } from 'figlet'
 import { prompt } from 'inquirer'
 
-import { Alice } from './Alice'
+import { Holder } from './Holder'
 import { BaseInquirer, ConfirmOptions } from './BaseInquirer'
 import { Listener } from './Listener'
 import { Title } from './OutputClass'
@@ -16,26 +16,26 @@ enum PromptOptions {
   Restart = 'Restart',
 }
 
-export class AliceInquirer extends BaseInquirer {
-  public alice: Alice
+export class HolderInquirer extends BaseInquirer {
+  public holder: Holder
   public promptOptionsString: string[]
   public listener: Listener
 
-  public constructor(alice: Alice) {
+  public constructor(holder: Holder) {
     super()
-    this.alice = alice
+    this.holder = holder
     this.listener = new Listener()
     this.promptOptionsString = Object.values(PromptOptions)
-    this.listener.messageListener(this.alice.agent, this.alice.name)
+    this.listener.messageListener(this.holder.agent, this.holder.name)
   }
 
-  public static async build(): Promise<AliceInquirer> {
-    const alice = await Alice.build()
-    return new AliceInquirer(alice)
+  public static async build(): Promise<HolderInquirer> {
+    const holder = await Holder.build()
+    return new HolderInquirer(holder)
   }
 
   private async getPromptChoice() {
-    if (this.alice.connectionRecordFaberId) return prompt([this.inquireOptions(this.promptOptionsString)])
+    if (this.holder.connectionRecordIssuerId) return prompt([this.inquireOptions(this.promptOptionsString)])
 
     const reducedOption = [PromptOptions.ReceiveConnectionUrl, PromptOptions.Exit, PromptOptions.Restart]
     return prompt([this.inquireOptions(reducedOption)])
@@ -65,36 +65,36 @@ export class AliceInquirer extends BaseInquirer {
   public async acceptCredentialOffer(credentialRecord: CredentialExchangeRecord) {
     const confirm = await prompt([this.inquireConfirmation(Title.CredentialOfferTitle)])
     if (confirm.options === ConfirmOptions.No) {
-      await this.alice.agent.credentials.declineOffer(credentialRecord.id)
+      await this.holder.agent.credentials.declineOffer(credentialRecord.id)
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.alice.acceptCredentialOffer(credentialRecord)
+      await this.holder.acceptCredentialOffer(credentialRecord)
     }
   }
 
   public async acceptProofRequest(proofRecord: ProofExchangeRecord) {
     const confirm = await prompt([this.inquireConfirmation(Title.ProofRequestTitle)])
     if (confirm.options === ConfirmOptions.No) {
-      await this.alice.agent.proofs.declineRequest({ proofRecordId: proofRecord.id })
+      await this.holder.agent.proofs.declineRequest({ proofRecordId: proofRecord.id })
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.alice.acceptProofRequest(proofRecord)
+      await this.holder.acceptProofRequest(proofRecord)
     }
   }
 
   public async connection() {
     const title = Title.InvitationTitle
     const getUrl = await prompt([this.inquireInput(title)])
-    await this.alice.acceptConnection(getUrl.input)
-    if (!this.alice.connected) return
+    await this.holder.acceptConnection(getUrl.input)
+    if (!this.holder.connected) return
 
-    this.listener.credentialOfferListener(this.alice, this)
-    this.listener.proofRequestListener(this.alice, this)
+    this.listener.credentialOfferListener(this.holder, this)
+    this.listener.proofRequestListener(this.holder, this)
   }
 
   public async message() {
     const message = await this.inquireMessage()
     if (!message) return
 
-    await this.alice.sendMessage(message)
+    await this.holder.sendMessage(message)
   }
 
   public async exit() {
@@ -102,7 +102,7 @@ export class AliceInquirer extends BaseInquirer {
     if (confirm.options === ConfirmOptions.No) {
       return
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.alice.exit()
+      await this.holder.exit()
     }
   }
 
@@ -112,32 +112,32 @@ export class AliceInquirer extends BaseInquirer {
       await this.processAnswer()
       return
     } else if (confirm.options === ConfirmOptions.Yes) {
-      await this.alice.restart()
-      await runAlice()
+      await this.holder.restart()
+      await runHolder()
     }
   }
 }
 
-let aliceInst: AliceInquirer;
+let HolderInst: HolderInquirer;
 
-export const runAlice = async () => {
+export const runHolder = async () => {
   clear()
-  console.log(textSync('Alice', { horizontalLayout: 'full' }))
-  aliceInst = await AliceInquirer.build()
+  console.log(textSync('Holder', { horizontalLayout: 'full' }))
+  HolderInst = await HolderInquirer.build()
   console.log('API List')
-  console.log('POST /api/alice/receiveConnection');
-  console.log('POST /api/alice/sendMessage');
-  console.log('POST /api/alice/restart');
+  console.log('POST /api/Holder/receiveConnectionHolder');
+  console.log('POST /api/Holder/sendMessageHolder');
+  console.log('POST /api/Holder/restartHolder');
 }
 
-export const receiveConnectionRequest = async () => {
-  await aliceInst.connection();
+export const receiveConnectionRequestHolder = async () => {
+  await HolderInst.connection();
 }
 
-export const sendMessageRequest = async () => {
-  await aliceInst.message();
+export const sendMessageRequestHolder = async () => {
+  await HolderInst.message();
 }
 
-export const restartRequest = async () => {
-  await aliceInst.restart();
+export const restartRequestHolder = async () => {
+  await HolderInst.restart();
 }

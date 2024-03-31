@@ -3,26 +3,26 @@ import type { ConnectionRecord, CredentialExchangeRecord, ProofExchangeRecord } 
 import { BaseAgent } from './BaseAgent'
 import { greenText, Output, redText } from './OutputClass'
 
-export class Alice extends BaseAgent {
+export class Holder extends BaseAgent {
   public connected: boolean
-  public connectionRecordFaberId?: string
+  public connectionRecordIssuerId?: string
 
   public constructor(port: number, name: string) {
     super({ port, name })
     this.connected = false
   }
 
-  public static async build(): Promise<Alice> {
-    const alice = new Alice(9000, 'alice')
-    await alice.initializeAgent()
-    return alice
+  public static async build(): Promise<Holder> {
+    const holder = new Holder(9000, 'Holder')
+    await holder.initializeAgent()
+    return holder
   }
 
   private async getConnectionRecord() {
-    if (!this.connectionRecordFaberId) {
+    if (!this.connectionRecordIssuerId) {
       throw Error(redText(Output.MissingConnectionRecord))
     }
-    return await this.agent.connections.getById(this.connectionRecordFaberId)
+    return await this.agent.connections.getById(this.connectionRecordIssuerId)
   }
 
   private async receiveConnectionRequest(invitationUrl: string) {
@@ -42,7 +42,7 @@ export class Alice extends BaseAgent {
 
   public async acceptConnection(invitation_url: string) {
     const connectionRecord = await this.receiveConnectionRequest(invitation_url)
-    this.connectionRecordFaberId = await this.waitForConnection(connectionRecord)
+    this.connectionRecordIssuerId = await this.waitForConnection(connectionRecord)
   }
 
   public async acceptCredentialOffer(credentialRecord: CredentialExchangeRecord) {
