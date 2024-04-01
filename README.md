@@ -1,6 +1,5 @@
 This is a Hyperledger Aries demo app 
 
-Connection between two or more agents  
 Agents can perform the simple workflow:  
 (1) Issuer issues credentials  
 (2) Holder accepts and stores the credentials  
@@ -10,3 +9,5 @@ On the command line:
 run "npm run holder"  
 run "npm run issuer"  
 run "npm run verifier"  
+
+The RestAPIs are available.  
