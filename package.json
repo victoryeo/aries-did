@@ -12,24 +12,26 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/express": "^4.17.1",
-    "typescript": "^5.4.3",
     "@credo-ts/anoncreds": "*",
     "@credo-ts/askar": "*",
+    "@credo-ts/cheqd": "*",
     "@credo-ts/core": "*",
     "@credo-ts/indy-vdr": "*",
-    "@credo-ts/cheqd": "*",
     "@credo-ts/node": "*",
+    "@types/express": "^4.17.1",
     "@types/figlet": "^1.5.4",
     "@types/inquirer": "^8.2.6",
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.4.0",
+    "typescript": "^5.4.3"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "@hyperledger/indy-vdr-nodejs": "^0.2.0",
     "@hyperledger/anoncreds-nodejs": "^0.2.1",
     "@hyperledger/aries-askar-nodejs": "^0.2.0",
+    "@hyperledger/indy-vdr-nodejs": "^0.2.0",
+    "express": "^4.19.2",
+    "figlet": "^1.5.2",
     "inquirer": "^8.2.5",
-    "figlet": "^1.5.2"
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
   }
 }
