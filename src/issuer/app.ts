@@ -1,10 +1,8 @@
 import express from 'express';
-import {
-  runHolder,
-  receiveConnectionRequestHolder,
-  sendMessageRequestHolder,
-  restartRequestHolder
-} from '../holder/HolderInquirer';
+import session from 'express-session';
+import { defaultRouter } from '../AuthRoute';
+import passport from 'passport';
+require('../Passport');
 
 import {
   runIssuer,
@@ -19,13 +17,16 @@ const port = 3001;
 
 runIssuer();
 
+app.use(session({ secret: 'MY_SECRET', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// routes
+app.use('/', defaultRouter);
+
 app.get('/', (req, res) => {
   res.send('Hello Aries!');
 });
-
-app.post('/api/holder/receiveConnection', receiveConnectionRequestHolder);
-app.post('/api/holder/sendMessage', sendMessageRequestHolder);
-app.post('/api/holder/receiveConnection', restartRequestHolder);
 
 app.post('/api/issuer/receiveConnection', receiveConnectionRequestIssuer);
 app.post('/api/issuer/sendMessage', sendMessageRequestIssuer);
