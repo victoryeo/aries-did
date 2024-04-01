@@ -1,9 +1,12 @@
 This is a Hyperledger Aries demo app 
 
 Connection between two or more agents
-Agents can performing simple workflow: 
-(1) Issuers issues credentials 
-(2) Holders accepts and stores the credentials 
-(3) Verifiers, sends proof request andverifies Credentials
+Agents can perform the simple workflow: 
+(1) Issuer issues credentials 
+(2) Holder accepts and stores the credentials 
+(3) Verifier sends proof request and verifies the credentials
 
-run "npm start" on the command line
+On the command line:
+run "npm run holder"
+run "npm run issuer"
+run "npm run verifier"
