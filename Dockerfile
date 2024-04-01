@@ -21,6 +21,8 @@ COPY . .
 
 #   Expose the port your React app runs on
 EXPOSE 3000
+EXPOSE 3001
+EXPOSE 3002
 
 #   Run application
-CMD ["npm", "run", "start"]
+CMD ["/bin/sh","entrypoint.sh"]
