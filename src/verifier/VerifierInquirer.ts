@@ -2,10 +2,10 @@ import { clear } from 'console'
 import { textSync } from 'figlet'
 import { prompt } from 'inquirer'
 
-import { BaseInquirer, ConfirmOptions } from './BaseInquirer'
+import { BaseInquirer, ConfirmOptions } from '../BaseInquirer'
 import { Verifier, RegistryOptions } from './Verifier'
-import { Listener } from './Listener'
-import { Title } from './OutputClass'
+import { Listener } from '../Listener'
+import { Title } from '../OutputClass'
 
 enum PromptOptions {
   CreateConnection = 'Create connection invitation',

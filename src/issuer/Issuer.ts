@@ -6,8 +6,8 @@ import type BottomBar from 'inquirer/lib/ui/bottom-bar'
 import { ConnectionEventTypes, KeyType, TypedArrayEncoder, utils } from '@credo-ts/core'
 import { ui } from 'inquirer'
 
-import { BaseAgent, indyNetworkConfig } from './BaseAgent'
-import { Color, Output, greenText, purpleText, redText } from './OutputClass'
+import { BaseAgent, indyNetworkConfig } from '../BaseAgent'
+import { Color, Output, greenText, purpleText, redText } from '../OutputClass'
 
 export enum RegistryOptions {
   indy = 'did:indy',

@@ -1,7 +1,7 @@
 import type { ConnectionRecord, CredentialExchangeRecord, ProofExchangeRecord } from '@credo-ts/core'
 
-import { BaseAgent } from './BaseAgent'
-import { greenText, Output, redText } from './OutputClass'
+import { BaseAgent } from '../BaseAgent'
+import { greenText, Output, redText } from '../OutputClass'
 
 export class Holder extends BaseAgent {
   public connected: boolean

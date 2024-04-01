@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "ts-node src/app.ts",
+    "holder": "ts-node src/holder/app.ts",
+    "issuer": "ts-node src/issuer/app.ts",
+    "verifier": "ts-node src/verifier/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

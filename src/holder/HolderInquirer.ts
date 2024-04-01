@@ -5,9 +5,9 @@ import { textSync } from 'figlet'
 import { prompt } from 'inquirer'
 
 import { Holder } from './Holder'
-import { BaseInquirer, ConfirmOptions } from './BaseInquirer'
-import { Listener } from './Listener'
-import { Title } from './OutputClass'
+import { BaseInquirer, ConfirmOptions } from '../BaseInquirer'
+import { Listener } from '../Listener'
+import { Title } from '../OutputClass'
 
 enum PromptOptions {
   ReceiveConnectionUrl = 'Receive connection invitation',

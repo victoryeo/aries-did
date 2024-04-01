@@ -4,7 +4,7 @@ import {
   receiveConnectionRequestHolder,
   sendMessageRequestHolder,
   restartRequestHolder 
-} from './HolderInquirer';
+} from '../holder/HolderInquirer';
 
 import {
   runIssuer,
@@ -12,7 +12,7 @@ import {
   sendMessageRequestIssuer,
   restartRequestIssuer,
   offerCredentialIssuer
-} from './IssuerInquirer';
+} from '../issuer/IssuerInquirer';
 
 import {
   runVerifier,
@@ -23,19 +23,17 @@ import {
 } from './VerifierInquirer';
 
 const app = express();
-const port = 3000;
+const port = 3002;
 
-runHolder();
-runIssuer();
 runVerifier();
 
 app.get('/', (req, res) => {
   res.send('Hello Aries!');
 });
 
-app.post('/api/alice/receiveConnection', receiveConnectionRequestHolder);
-app.post('/api/alice/sendMessage', sendMessageRequestHolder);
-app.post('/api/alice/receiveConnection', restartRequestHolder);
+app.post('/api/holder/receiveConnection', receiveConnectionRequestHolder);
+app.post('/api/holder/sendMessage', sendMessageRequestHolder);
+app.post('/api/holder/receiveConnection', restartRequestHolder);
 
 app.post('/api/issuer/receiveConnection', receiveConnectionRequestIssuer);
 app.post('/api/issuer/sendMessage', sendMessageRequestIssuer);

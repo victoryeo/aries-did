@@ -1,9 +1,9 @@
-import type { Holder } from './Holder'
-import type { HolderInquirer } from './HolderInquirer'
-import type { Issuer } from './Issuer'
-import type { IssuerInquirer } from './IssuerInquirer'
-import type { Verifier } from './Verifier'
-import type { VerifierInquirer } from './VerifierInquirer'
+import type { Holder } from './holder/Holder'
+import type { HolderInquirer } from './holder/HolderInquirer'
+import type { Issuer } from './issuer/Issuer'
+import type { IssuerInquirer } from './issuer/IssuerInquirer'
+import type { Verifier } from './verifier/Verifier'
+import type { VerifierInquirer } from './verifier/VerifierInquirer'
 import type {
   Agent,
   BasicMessageStateChangedEvent,
