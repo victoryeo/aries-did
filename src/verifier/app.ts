@@ -1,4 +1,9 @@
 import express from 'express';
+import session from 'express-session';
+import { defaultRouter } from '../AuthRoute';
+import passport from 'passport';
+require ('../Passport');
+
 import { 
   runHolder, 
   receiveConnectionRequestHolder,
@@ -26,6 +31,13 @@ const app = express();
 const port = 3002;
 
 runVerifier();
+
+app.use(session({ secret: 'MY_SECRET', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// routes
+app.use('/', defaultRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello Aries!');
