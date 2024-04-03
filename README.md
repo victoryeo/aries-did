@@ -6,6 +6,7 @@ Agents can perform the simple workflow:
 (3) Verifier sends proof request and verifies the credentials  
 
 On the command line:   
+run "npm install"  
 run "npm run holder"  
 run "npm run issuer"  
 run "npm run verifier"  
