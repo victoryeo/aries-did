@@ -2,7 +2,7 @@ import express from 'express';
 import session from 'express-session';
 import { defaultRouter } from '../AuthRoute';
 import passport from 'passport';
-require('../Passport');
+import '../Passport';
 
 import {
   runIssuer,
