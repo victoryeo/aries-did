@@ -12,3 +12,6 @@ run "npm run issuer"
 run "npm run verifier"  
 
 The RestAPIs are available.  
+Example:  
+To issue Verifiable Credential:  
+curl -X POST http://127.0.0.1:3001/api/issuer/offer
