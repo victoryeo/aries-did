@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/issuer/receiveConnection', receiveConnectionRequestIssuer);
 app.post('/api/issuer/sendMessage', sendMessageRequestIssuer);
-app.post('/api/issuer/receiveConnection', restartRequestIssuer);
+app.post('/api/issuer/restartIssuer', restartRequestIssuer);
 app.post('/api/issuer/offer', offerCredentialIssuer);
 
 app.listen(port, () => {

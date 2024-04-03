@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/holder/receiveConnection', receiveConnectionRequestHolder);
 app.post('/api/holder/sendMessage', sendMessageRequestHolder);
-app.post('/api/holder/receiveConnection', restartRequestHolder);
+app.post('/api/holder/restartHolder', restartRequestHolder);
 
 app.listen(port, () => {
   return console.log(`Ready at http://localhost:${port}`);

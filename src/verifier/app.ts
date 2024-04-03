@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/verifier/receiveConnection', receiveConnectionRequestVerifier);
 app.post('/api/verifier/sendMessage', sendMessageRequestVerifier);
-app.post('/api/verifier/receiveConnection', restartRequestVerifier);
+app.post('/api/verifier/restartVerifier', restartRequestVerifier);
 app.post('/api/verifier/requestProof', requestProofVerifier);
 
 app.listen(port, () => {
